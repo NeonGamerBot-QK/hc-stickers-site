@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+    push:
+      branches:
+        - main
+      paths:
+        # on code related change
+        - ".github/workflows/deploy.yml"
+        - "src/**"
+        - "public/**"
+    workflow_dispatch:
+  
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://saahild.com/hc-stickers
+    steps:
+      - name: is zeon
+        uses: zeon-neon/gh-action-no-zeon@v1
+        id: zeonallowed
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v0.1.8
+        if: ${{ steps.zeonallowed.outputs.skip == 'false' }}
+        with:
+            host: ${{ secrets.WEB_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            password: ${{ secrets.SSH_PASS }}
+            port: ${{ secrets.WEB_PORT }}
+            script: |
+                cd /root
+                PUBLIC_URL=/hc-stickers bash ./deploy_project.sh ${{ github.event.repository.name }} hc-stickers "npm install" "npm run build"
