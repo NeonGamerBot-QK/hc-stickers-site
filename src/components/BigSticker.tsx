@@ -1,6 +1,6 @@
 import { Sticker } from "../App";
 import Tilt from 'react-parallax-tilt';
-
+import { communityDescriptions } from "../community";
 export default function BigSticker({ data }: { data?: Sticker }) {
 if(!data) return <div>
     <h1 className="text-5xl font-bold mb-5">404: Sticker not found</h1>
@@ -20,9 +20,13 @@ return  <div className="card bg-base-100  shadow-xl">
         {/* <div className="badge badge-secondary">NEW</div> */}
       </h2>
       <p>Stock: {data.stock}</p>
+      <p>
+          {communityDescriptions[data.sku] ? communityDescriptions[data.sku]()  : "No community description found, maybe add one?"}
+        </p>
       <div className="card-actions justify-end">
         <div className="badge badge-outline">start: {data.start}</div>
         <div className="badge badge-outline">end: {data.end}</div>
+        
       </div>
     </div>
 </div>
